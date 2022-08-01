@@ -2,7 +2,7 @@ import datetime
 
 import sqlalchemy.orm
 
-from base import Base
+from .base import Base
 
 
 class User(Base):
@@ -26,12 +26,13 @@ class Party(Base):
 
 
 class PartyUsers(Base):
-    id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("party.id"))
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)
+    party_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("party.id"))
     user_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("user.id"))
     music_json = sqlalchemy.Column(sqlalchemy.JSON)
 
-    user: User = sqlalchemy.orm.relationship('User', foreign_keys="User.id")
-    party: Party = sqlalchemy.orm.relationship('Party', foreign_keys="Party.id")
+    user: User = sqlalchemy.orm.relationship('User', foreign_keys="user.id")
+    party: Party = sqlalchemy.orm.relationship('Party', foreign_keys="party.id")
 
     def __repr__(self) -> str:
         return f"Party id={self.id}, user_id={self.user_id}"
